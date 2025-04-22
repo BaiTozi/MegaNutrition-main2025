@@ -13,6 +13,8 @@ const LoginPopup = ({ setShowLogin }) => {
   const [secretCode, setSecretCode] = useState("");
 
   async function login() {
+    console.log(currState);
+
     if (currState === "Login") {
       try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -20,6 +22,15 @@ const LoginPopup = ({ setShowLogin }) => {
 
         // Fetch user role from Firestore
         const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (!userDoc.exists()) {
+          await setDoc(doc(db, "users", user.uid), {
+            name: user.displayName || "Unknown",
+            email: user.email,
+            role: "user",
+            createdAt: new Date(),
+          });
+          // Then re-fetch it if needed
+        }
         const userRole = userDoc.data().role;
 
         console.log(userDoc)

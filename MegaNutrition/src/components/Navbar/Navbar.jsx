@@ -1,47 +1,55 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom'; // Import Link for routing
+import { Link } from 'react-router-dom';
 import './Navbar.css';
 import { assets } from '../../assets/assets.js';
 import { StoreContext } from '../../context/StoreContext.jsx';
-import { auth } from '../../firebase/config'; // Import Firebase auth
-import { signOut } from "firebase/auth"; // Import Firebase signOut
-import { doc, getDoc } from "firebase/firestore"; // Import Firestore functions
-import { db } from '../../firebase/config'; // Import Firestore instance
+import { auth } from '../../firebase/config';
+import { signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from '../../firebase/config';
 
 const Navbar = ({ setShowLogin }) => {
   const [menu, setMenu] = useState("home");
-  const [user, setUser] = useState(null); // State to store user data
-  const [isAdmin, setIsAdmin] = useState(false); // State to check if user is admin
+  const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [displayName, setDisplayName] = useState(null);
   const { getTotalCartAmount } = useContext(StoreContext);
 
-  // Check if user is logged in and fetch user role
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        setUser(user); // Set user data
+      if (user && user.uid) {
+        setUser(user);
 
-        // Fetch user role from Firestore
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists()) {
-          const userRole = userDoc.data().role;
-          setIsAdmin(userRole === "admin"); // Set isAdmin to true if role is 'admin'
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            const userRole = userData?.role;
+            const userName = userData?.name;
+
+            setIsAdmin(userRole === "admin");
+            setDisplayName(userName || user.email); // показваме име, ако има
+          }
+        } catch (error) {
+          console.error("Error fetching user data in navbar:", error);
         }
       } else {
-        setUser(null); // Clear user data if not logged in
-        setIsAdmin(false); // Reset isAdmin
+        setUser(null);
+        setIsAdmin(false);
+        setDisplayName(null);
       }
     });
 
-    return () => unsubscribe(); // Cleanup on unmount
+    return () => unsubscribe();
   }, []);
 
-  // Handle logout
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      setUser(null); // Clear user data
-      setIsAdmin(false); // Reset isAdmin
-      window.location.href = "/"; // Redirect to home page
+      setUser(null);
+      setIsAdmin(false);
+      setDisplayName(null);
+      window.location.href = "/";
     } catch (error) {
       console.error("Logout Error:", error);
     }
@@ -56,18 +64,17 @@ const Navbar = ({ setShowLogin }) => {
         <a href='#app-download' onClick={() => setMenu("mobile-app")} className={menu === "mobile-app" ? "active" : ""}>mobile-app</a>
         <a href='#footer' onClick={() => setMenu("contact-us")} className={menu === "contact-us" ? "active" : ""}>contact us</a>
 
-        {/* Show Admin Panel link only for admin users */}
         {isAdmin && (
           <li>
             <Link to="/admin" className={menu === "admin" ? "active" : ""}>Admin Panel</Link>
           </li>
         )}
 
-        {/* Линк към BMI калкулатора */}
         <li>
           <Link to="/bmi" className={menu === "bmi" ? "active" : ""}>BMI Calculator</Link>
         </li>
       </ul>
+
       <div className="navbar-right">
         <img src={assets.search_icon} alt="" />
         <div className="navbar-search-icon">
@@ -75,10 +82,9 @@ const Navbar = ({ setShowLogin }) => {
           <div className={getTotalCartAmount() === 0 ? "" : "dot"}></div>
         </div>
 
-        {/* Show user email and logout button if logged in, otherwise show sign-in button */}
         {user ? (
           <div className="navbar-user">
-            <span>{user.email}</span>
+            <Link to="/account" className="account-link">{displayName}</Link>
             <button onClick={handleLogout}>Logout</button>
           </div>
         ) : (
@@ -89,4 +95,4 @@ const Navbar = ({ setShowLogin }) => {
   );
 };
 
-export default Navbar;  
+export default Navbar;

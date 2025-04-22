@@ -103,3 +103,15 @@
        display: none;
     }
 }
+.account-link {
+    color: purple;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-right: 10px;
+    font-weight: bold;
+  }
+  
+  .account-link:hover {
+    color: #6a1b9a;
+  }
+  

@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { db, storage, auth } from "../firebase/config.js";
-import { collection, addDoc, doc, getDoc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import "./AdminPanel.css"; // Импортирай CSS файла
+import {
+  collection,
+  addDoc,
+  doc,
+  getDoc
+} from "firebase/firestore";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL
+} from "firebase/storage";
+import { onAuthStateChanged } from "firebase/auth";
+import "./AdminPanel.css";
 
 const AdminPanel = () => {
   const [name, setName] = useState("");
@@ -11,29 +21,36 @@ const AdminPanel = () => {
   const [category, setCategory] = useState("Protein");
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Check user role on component load
+  // ✅ Проверка на ролята чрез onAuthStateChanged
   useEffect(() => {
-    const checkAdminRole = async () => {
-      const user = auth.currentUser;
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        const userRole = userDoc.data().role;
-
-        if (userRole !== "admin") {
-          // Redirect to home page if not admin
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            const userRole = userDoc.data()?.role;
+            if (userRole !== "admin") {
+              window.location.href = "/";
+            } else {
+              setIsLoading(false); // Всичко наред
+            }
+          } else {
+            window.location.href = "/";
+          }
+        } catch (error) {
+          console.error("Error fetching user role:", error);
           window.location.href = "/";
         }
       } else {
-        // Redirect to login page if not logged in
         window.location.href = "/login";
       }
-    };
+    });
 
-    checkAdminRole();
+    return () => unsubscribe();
   }, []);
 
-  // Handle image upload
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -42,9 +59,7 @@ const AdminPanel = () => {
 
       uploadTask.on(
         "state_changed",
-        (snapshot) => {
-          // Handle progress (optional)
-        },
+        null,
         (error) => {
           console.error("Image upload error: ", error);
         },
@@ -58,7 +73,6 @@ const AdminPanel = () => {
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -79,6 +93,7 @@ const AdminPanel = () => {
       console.log("Document written with ID: ", docRef.id);
       alert("Supplement added successfully!");
 
+      // Clear form
       setName("");
       setDescription("");
       setPrice("");
@@ -90,6 +105,10 @@ const AdminPanel = () => {
       alert("Error adding supplement.");
     }
   };
+
+  if (isLoading) {
+    return <div className="admin-panel"><p>Loading admin panel...</p></div>;
+  }
 
   return (
     <div className="admin-panel">
@@ -145,7 +164,9 @@ const AdminPanel = () => {
           <input type="file" onChange={handleImageUpload} required />
         </div>
 
-        <button type="submit" className="submit-button">Add Supplement</button>
+        <button type="submit" className="submit-button">
+          Add Supplement
+        </button>
       </form>
     </div>
   );

@@ -1,0 +1,69 @@
+.admin-panel {
+    margin-top: 100px;
+    padding: 20px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .admin-panel h1 {
+    text-align: center;
+    color: purple;
+    margin-bottom: 30px;
+  }
+  
+  .admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .form-group label {
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .form-group input {
+    padding: 10px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+  }
+  
+  .submit-button {
+    border: none;
+    color: white;
+    background-color: purple;
+    padding: 12px 0px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  .submit-button:hover {
+    background-color: #6a1b9a;
+  }
+  
+  @media (max-width: 750px) {
+    .admin-panel {
+      margin-top: 80px;
+      padding: 10px;
+    }
+  
+    .form-group input {
+      font-size: 12px;
+    }
+  
+    .submit-button {
+      font-size: 14px;
+    }
+  }
+  
