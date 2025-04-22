@@ -54,9 +54,10 @@ const AdminPanel = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const storageRef = ref(storage, `supplements_images/${file.name}`);
+      const uniqueName = `${Date.now()}-${file.name}`; // 🆕 Добавяме timestamp
+      const storageRef = ref(storage, `supplements_images/${uniqueName}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
-
+  
       uploadTask.on(
         "state_changed",
         null,
@@ -72,6 +73,7 @@ const AdminPanel = () => {
       );
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -166,7 +168,7 @@ const AdminPanel = () => {
 
         <button type="submit" className="submit-button">
           Add Supplement
-        </button>
+        </button>     
       </form>
     </div>
   );

@@ -1,23 +1,37 @@
-import React, { useContext } from 'react'
-import './SupplementDisplay.css'
-import { StoreContext } from '../../context/StoreContext'
-import SupplementItem from '../SupplementItem/SupplementItem'
+import React, { useContext } from 'react';
+import './SupplementDisplay.css';
+import { StoreContext } from '../../context/StoreContext';
+import SupplementItem from '../SupplementItem/SupplementItem';
 
+const SupplementDisplay = ({ category }) => {
+  const { products } = useContext(StoreContext);
 
-const SupplementDisplay = ({category}) => {
+  // Покажи "Loading..." докато продуктите се заредят
+  if (!products) {
+    return <div className="supplement-display">Loading supplements...</div>;
+  }
 
-  const {sup_list} = useContext(StoreContext)
+  const filteredProducts = category
+    ? products.filter((item) => item.category === category)
+    : products;
 
   return (
-    <div className ='supplement-display' id='supplement-display'>
+    <div className="supplement-display" id="supplement-display">
       <h2>Top Supplements near you</h2>
       <div className="sup-display-list">
-        {sup_list.map((item, index)=>{
-            return <SupplementItem key = {index} id={item._id} name={item.name} description={item.description} price={item.price} image={item.image}/>
-        })}
+        {filteredProducts.map((item) => (
+          <SupplementItem
+            key={item.id}
+            id={item.id}
+            name={item.name}
+            description={item.description}
+            price={item.price}
+            image={item.imageURL}
+          />
+        ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SupplementDisplay
+export default SupplementDisplay;

@@ -1,51 +1,75 @@
 import { createContext, useEffect, useState } from "react";
-import { sup_list } from "../assets/assets"
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase/config";
 
-export const StoreContext = createContext(null)
+export const StoreContext = createContext(null);
 
 const StoreContextProvider = (props) => {
+  const [products, setProducts] = useState([]);
+  const [cartItems, setCartItems] = useState({});
 
-    const [cartItems,setCartItems] = useState({});
-
-    const addToCart = (itemId) => {
-        if (!cartItems[itemId]) {
-            setCartItems((prev)=>({...prev,[itemId]:1}))
-        }
-        else{
-            setCartItems((prev)=>({...prev,[itemId]:prev[itemId]+1}))
-        }
+  // Зареждане на продукти от Firestore
+  const fetchProducts = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "supplements"));
+      const productList = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      setProducts(productList);
+    } catch (error) {
+      console.error("Error loading products:", error);
     }
+  };
 
-    const removeFromCart = (itemId) => {
-        setCartItems((prev)=>({...prev,[itemId]:prev[itemId]-1}))
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const addToCart = (itemId) => {
+    setCartItems((prev) => ({
+      ...prev,
+      [itemId]: prev[itemId] ? prev[itemId] + 1 : 1,
+    }));
+  };
+
+  const removeFromCart = (itemId) => {
+    setCartItems((prev) => ({
+      ...prev,
+      [itemId]: Math.max((prev[itemId] || 0) - 1, 0),
+    }));
+  };
+
+  const updateCart = (newCart) => {
+    setCartItems(newCart);
+  };
+
+  const getTotalCartAmount = () => {
+    let total = 0;
+    for (const itemId in cartItems) {
+      const product = products.find((p) => p.id === itemId);
+      if (product) {
+        total += product.price * cartItems[itemId];
+      }
     }
+    return total;
+  };
 
-    const getTotalCartAmount = () => {
-        let totalAmount = 0;
-        for (const item in cartItems) {
-            if (cartItems[item] > 0) {
-                let itemInfo = sup_list.find((product) => product._id === item);
-                totalAmount += itemInfo.price * cartItems[item]
-            }
-        }
-        return totalAmount;
-    }
+  const contextValue = {
+    products,
+    cartItems,
+    setCartItems,
+    addToCart,
+    removeFromCart,
+    updateCart,
+    getTotalCartAmount,
+  };
 
-
-    const contextValue = {
-        sup_list,
-        cartItems,
-        setCartItems,
-        addToCart,
-        removeFromCart,
-        getTotalCartAmount
-    }
-    
-    return(
-        <StoreContext.Provider value={contextValue}>
-            {props.children}
-        </StoreContext.Provider>
-    )
-}
+  return (
+    <StoreContext.Provider value={contextValue}>
+      {props.children}
+    </StoreContext.Provider>
+  );
+};
 
 export default StoreContextProvider;
