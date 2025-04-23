@@ -16,7 +16,7 @@ const Cart = () => {
   const totalAmount = getTotalCartAmount();
 
   if (!products || products.length === 0) {
-    return <p className="cart-loading">Зареждане на продукти...</p>;
+    return <p className="cart-loading">Loading Products...</p>;
   }
 
   return (
@@ -41,9 +41,9 @@ const Cart = () => {
               <div key={id} className="cart-items-item">
                 <img src={product.imageURL} alt={product.name} />
                 <p>{product.name}</p>
-                <p>{product.price} лв.</p>
+                <p>{product.price} lv.</p>
                 <p>{quantity}</p>
-                <p>{product.price * quantity} лв.</p>
+                <p>{product.price * quantity} lv.</p>
                 <p onClick={() => removeFromCart(id)} className="cross">
                   x
                 </p>
@@ -54,28 +54,28 @@ const Cart = () => {
 
       <div className="cart-bottom">
         <div className="cart-total">
-          <h2>Общо: {totalAmount} лв.</h2>
+          <h2>Total: {totalAmount} lv.</h2>
           <div>
             <div className="cart-total-details">
               <p>Subtotal</p>
-              <p>{totalAmount} лв.</p>
+              <p>{totalAmount} lv.</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <p>Delivery Fee</p>
-              <p>{totalAmount === 0 ? 0 : 2} лв.</p>
+              <p>{totalAmount === 0 ? 0 : 2} lv.</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <b>Total</b>
-              <b>{totalAmount === 0 ? 0 : totalAmount + 2} лв.</b>
+              <b>{totalAmount === 0 ? 0 : totalAmount + 2} lv.</b>
             </div>
           </div>
           <button
             onClick={() => navigate("/checkout")}
             disabled={totalAmount === 0}
           >
-            Поръчай
+            Order
           </button>
         </div>
 

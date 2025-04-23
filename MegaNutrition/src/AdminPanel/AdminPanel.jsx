@@ -125,7 +125,7 @@ const AdminPanel = () => {
           >
             <option value="Protein">Protein</option>
             <option value="Creatin">Creatin</option>
-            <option value="L arginine">L arginine</option>
+            <option value="L arginine">L Arginin</option>
             <option value="Citrulin malate">Citrulin malate</option>
             <option value="Tribulus">Tribulus</option>
             <option value="Pre workout">Pre workout</option>

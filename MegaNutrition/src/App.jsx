@@ -26,6 +26,7 @@ const App = () => {
           <Route path="/account" element={<AccountPanel />}/>
           <Route path="/login" element={<LoginPopup />} />
           <Route path="/bmi" element={<BMICalculator />} /> {/* Нов маршрут за BMI калкулатора */}
+          <Route path='/checkout' element={<PlaceOrder />} />
         </Routes>  
       </div>
       <Footer/>      

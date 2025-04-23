@@ -6,7 +6,7 @@ import { collection, addDoc, Timestamp } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 
 const PlaceOrder = () => {
-  const { cartItems, getTotalCartAmount } = useContext(StoreContext);
+  const { cartItems, getTotalCartAmount, products, setCartItems } = useContext(StoreContext);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -37,10 +37,28 @@ const PlaceOrder = () => {
       return;
     }
 
+    const selectedProducts = Object.entries(cartItems)
+      .filter(([id, qty]) => qty > 0)
+      .map(([id, qty]) => {
+        const product = products.find(p => p.id === id);
+        return {
+          id,
+          name: product?.name || "Unknown",
+          price: product?.price || 0,
+          quantity: qty,
+          total: (product?.price || 0) * qty
+        };
+      });
+
+    if (selectedProducts.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
     try {
       const orderData = {
         userId: user.uid,
-        cartItems,
+        cart: selectedProducts,
         totalAmount: getTotalCartAmount() + 2,
         deliveryFee: 2,
         deliveryInfo: formData,
@@ -49,7 +67,8 @@ const PlaceOrder = () => {
 
       await addDoc(collection(db, "orders"), orderData);
       alert("Order placed successfully!");
-      navigate('/'); // връща към началната страница или друга по избор
+      setCartItems({}); // изчистваме количката
+      navigate('/');
     } catch (error) {
       console.error("Error placing order: ", error);
       alert("Error placing order.");
@@ -76,26 +95,27 @@ const PlaceOrder = () => {
         </div>
         <input type="tel" name="phone" placeholder='Phone' onChange={handleChange} required />
       </div>
+
       <div className="place-order-right">
         <div className="cart-total">
           <h2>Cart Totals</h2>
           <div>
             <div className="cart-total-details">
               <p>Subtotal</p>
-              <p>${getTotalCartAmount()}</p>
+              <p>{getTotalCartAmount()} lv.</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <p>Delivery Fee</p>
-              <p>$2</p>
+              <p>2 lv.</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <b>Total</b>
-              <b>${getTotalCartAmount() + 2}</b>
+              <b>{getTotalCartAmount() + 2} лв.</b>
             </div>
           </div>
-          <button type="submit">PROCEED TO PAYMENT</button>
+          <button type="submit">Order</button>
         </div>
       </div>
     </form>
