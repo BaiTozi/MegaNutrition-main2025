@@ -112,7 +112,7 @@ const PlaceOrder = () => {
             <hr />
             <div className="cart-total-details">
               <b>Total</b>
-              <b>{getTotalCartAmount() + 2} лв.</b>
+              <b>{getTotalCartAmount() + 2} lv.</b>
             </div>
           </div>
           <button type="submit">Order</button>

@@ -1,14 +1,16 @@
 .header {
-    height: 35vw;
+    height: 30vw;
     margin: 30px auto;
-    background: url('/header.png') no-repeat center/cover;
+    background: url('/header.png') no-repeat;
+    background-size: cover;
+    background-position: center;
     position: relative;
     border-radius: 20px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
     overflow: hidden;
-  }
-  
-  .header-contents {
+}
+
+.header-contents {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -17,77 +19,74 @@
     max-width: 50%;
     bottom: 10%;
     left: 6vw;
-    animation: fadeIn 1.5s ease-in-out;
-    color: white;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
-  }
-  
-  .header-contents h2 {
-    font-size: max(4.5vw, 26px);
+    animation: fadeIn 1.5s ease-out;
+}
+
+.header-contents h2 {
     font-weight: 600;
+    font-size: max(4.5vw, 22px);
     background: linear-gradient(to right, #8c00ff, #0cddf5);
+    background-clip: text;
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  
-  .header-contents p {
-    font-size: 1.1vw;
-    line-height: 1.4;
-    max-width: 90%;
-    color: #f0f0f0;
-  }
-  
-  .header-contents button {
+    color: transparent;
+}
+
+.header-contents p {
+    font-size: 1.2vw;
+    line-height: 1.5;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.header-contents button {
     border: none;
     color: white;
-    font-weight: 600;
+    background: #8c00ff;
     padding: 1vw 2.5vw;
-    background: linear-gradient(to right, #8c00ff, #0cddf5);
-    font-size: max(1vw, 14px);
-    border-radius: 30px;
+    font-weight: 500;
+    font-size: max(1vw, 13px);
+    border-radius: 50px;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  
-  .header-contents button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(140, 0, 255, 0.4);
-  }
-  
-  /* Animations */
-  @keyframes fadeIn {
+    transition: background 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.header-contents button:hover {
+    background: #6b00cc;
+}
+
+@media (max-width: 1050px) {
+    .header {
+        height: 38vw;
+    }
+
+    .header-contents {
+        max-width: 60%;
+    }
+}
+
+@media (max-width: 750px) {
+    .header-contents {
+        max-width: 75%;
+    }
+
+    .header-contents p {
+        display: none;
+    }
+
+    .header-contents button {
+        padding: 2vw 4vw;
+        font-size: 14px;
+    }
+}
+
+@keyframes fadeIn {
     0% {
-      opacity: 0;
-      transform: translateY(20px);
+        opacity: 0;
+        transform: translateY(20px);
     }
     100% {
-      opacity: 1;
-      transform: translateY(0);
+        opacity: 1;
+        transform: translateY(0);
     }
-  }
-  
-  /* Responsive Styles */
-  @media (max-width: 1050px) {
-    .header {
-      height: 45vw;
-    }
-    .header-contents {
-      max-width: 60%;
-    }
-  }
-  
-  @media (max-width: 750px) {
-    .header {
-      height: 55vw;
-    }
-    .header-contents {
-      max-width: 80%;
-    }
-    .header-contents p {
-      display: none;
-    }
-    .header-contents button {
-      padding: 2vw 5vw;
-    }
-  }
-  
+}
