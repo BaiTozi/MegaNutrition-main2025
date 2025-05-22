@@ -41,12 +41,14 @@ const Cart = () => {
               <div key={id} className="cart-items-item">
                 <img src={product.imageURL} alt={product.name} />
                 <p>{product.name}</p>
-                <p>{product.price} lv.</p>
-                <p>{quantity}</p>
-                <p>{product.price * quantity} lv.</p>
-                <p onClick={() => removeFromCart(id)} className="cross">
-                  x
-                </p>
+                <p>{product.price} BGN</p>
+                <div className="cart-quantity-adjust">
+                  <button onClick={() => removeFromCart(id)} className="quantity-btn">−</button>
+                  <span>{quantity}</span>
+                  <button onClick={() => addToCart(id)} className="quantity-btn">+</button>
+                </div>
+                <p>{product.price * quantity} BGN</p>
+                <p onClick={() => removeFromCart(id)} className="cross">x</p>
               </div>
             );
           })}
@@ -54,21 +56,21 @@ const Cart = () => {
 
       <div className="cart-bottom">
         <div className="cart-total">
-          <h2>Total: {totalAmount} lv.</h2>
+          <h2>Total: {totalAmount} BGN</h2>
           <div>
             <div className="cart-total-details">
               <p>Subtotal</p>
-              <p>{totalAmount} lv.</p>
+              <p>{totalAmount} BGN</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <p>Delivery Fee</p>
-              <p>{totalAmount === 0 ? 0 : 2} lv.</p>
+              <p>{totalAmount === 0 ? 0 : 2} BGN</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <b>Total</b>
-              <b>{totalAmount === 0 ? 0 : totalAmount + 2} lv.</b>
+              <b>{totalAmount === 0 ? 0 : totalAmount + 2} BGN</b>
             </div>
           </div>
           <button

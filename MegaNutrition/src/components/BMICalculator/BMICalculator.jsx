@@ -9,7 +9,7 @@ const BMICalculator = () => {
 
   const calculateBMI = () => {
     if (!weight || !height) {
-      setError('Моля, въведете тегло и височина.');
+      setError('Please enter your weight and height.');
       return;
     }
 
@@ -24,42 +24,42 @@ const BMICalculator = () => {
 
   return (
     <div className="bmi-calculator">
-      <h1>BMI Калкулатор</h1>
+      <h1>BMI Calculator</h1>
       <div className="input-group">
         <label>
-          Тегло (кг):
+          Weight (kg):
           <input
             type="number"
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
-            placeholder="Въведете тегло"
+            placeholder="Enter weight"
           />
         </label>
       </div>
       <div className="input-group">
         <label>
-          Височина (см):
+          Height (cm):
           <input
             type="number"
             value={height}
             onChange={(e) => setHeight(e.target.value)}
-            placeholder="Въведете височина"
+            placeholder="Enter height"
           />
         </label>
       </div>
-      <button onClick={calculateBMI}>Изчисли BMI</button>
+      <button onClick={calculateBMI}>Calculate BMI</button>
       {error && <p className="error">{error}</p>}
       {bmi && (
         <div className="result">
-          <h2>Вашият BMI е: {bmi}</h2>
+          <h2>Your BMI е: {bmi}</h2>
           <p>
             {bmi < 18.5
-              ? 'Поднормено тегло'
+              ? 'Underweight'
               : bmi < 24.9
-              ? 'Нормално тегло'
+              ? 'Normal weight'
               : bmi < 29.9
-              ? 'Наднормено тегло'
-              : 'Затлъстяване'}
+              ? 'Overweight'
+              : 'Obesity'}
           </p>
         </div>
       )}

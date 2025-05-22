@@ -78,24 +78,24 @@ const AccountPanel = () => {
 
   return (
     <div className="admin-panel">
-      <h1>Панел на акаунта</h1>
+      <h1>Account Panel</h1>
       <div className="admin-form">
         <div className="form-group">
-          <label htmlFor="name">Име:</label>
+          <label htmlFor="name">Name:</label>
           <input
             type="text"
             value={name}
             onChange={handleNameChange}
-            placeholder="Въведи ново име"
+            placeholder="Enter new name:"
           />
         </div>
 
         <button className="submit-button" onClick={handleSave}>
-          Запази промените
+          Save Changes
         </button>
 
         <button className="submit-button" style={{ backgroundColor: 'crimson' }} onClick={handleDeleteAccount}>
-          Изтрий акаунта
+          Delete Account
         </button>
       </div>
     </div>

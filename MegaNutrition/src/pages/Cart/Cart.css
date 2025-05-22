@@ -114,4 +114,26 @@
       grid-template-columns: 1fr 2fr 1fr 1fr 1fr 0.5fr;
     }
   }
+    
+  .cart-quantity-adjust {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .quantity-btn {
+    padding: 4px 10px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    background-color: #d3d3d3;
+    color: black;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .quantity-btn:hover {
+    background-color: #c0c0c0;
+  }
   
